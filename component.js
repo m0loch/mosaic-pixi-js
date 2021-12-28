@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { Stage, Sprite } from '@inlet/react-pixi'
+import { Stage } from '@inlet/react-pixi';
+import Board from './board';
 
 function Mosaic(props) {
 
@@ -32,7 +33,7 @@ function Mosaic(props) {
                 width={stageDimensions.width}
                 height={stageDimensions.height}
             >
-                <Sprite image={props.img}  />
+                <Board image={props.img} rows={5} cols={10}/>
             </Stage> : null
             }
         </div>
