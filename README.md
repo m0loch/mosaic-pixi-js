@@ -22,8 +22,6 @@ PIXI.js
 @inlet/react-pixi
 
 ## Work that still needs to be done
-- break image into tiles
-- shuffle tiles
 - tile switching mechanics
 - check for win
 
