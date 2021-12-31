@@ -22,8 +22,13 @@ PIXI.js
 @inlet/react-pixi
 
 ## Work that still needs to be done
-- tile switching mechanics
 - check for win
+- fix issues
+- check mobile playability
+- win screen
+
+## Known issues
+- the fitting calculation is wrong - it's really evident on mobile
 
 ## Credits for the pictures
 https://syanart.com/
