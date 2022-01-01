@@ -29,7 +29,8 @@ function Board(props) {
                 tileWidth);
 
             tiles.push({
-                realIndex: i, // this will keep track of where the tile will need to end up
+                realIndex: cfg[i], // this will keep track of where the tile will need to end up
+                currIndex: i,
                 texture,
                 x: (i % props.cols) * tileWidth,
                 y: Math.floor(i / props.cols) * tileHeight,
@@ -40,15 +41,23 @@ function Board(props) {
         setLoaded(true);
     }, [props]);
 
+    const spriteRefs = useRef([]);
+
     useEffect(() => {
+        window.addEventListener('keydown', onKeyPressed);
+
         if (!PIXI.utils.TextureCache['img']) {
             app.loader
                 .add('img', props.image)
                 .load(initGame);
+        } else {
+            // Skips re-loading the background, if that already exists
+            initGame();
         }
-    }, [app, initGame, props.image]);
 
-    const spriteRefs = useRef([]);
+        return () => window.removeEventListener('keydown', onKeyPressed);
+
+    }, [app, initGame, props.image]);
 
     if (!loaded) {
         return(null);
@@ -77,17 +86,16 @@ function Board(props) {
         }
     }
     
-    const handleEndTouch = (sprite, event) => {
+    const handleEndTouch = (sprite) => {
 
         sprite.isPressed = false;
 
         const container = sprite.parent;
-        const targetPos = event.data.getLocalPosition(container);
 
         const targetSprite = container.children.find(
             child => (child.idx !== sprite.idx)
-                    && (Math.abs(child.position.x - targetPos.x) < (sprite.width))
-                    && (Math.abs(child.position.y - targetPos.y) < (sprite.height))
+                    && (Math.abs(child.position.x - sprite.x) < (sprite.width * 0.5))
+                    && (Math.abs(child.position.y - sprite.y) < (sprite.height * 0.5))
         );
 
         if (targetSprite) {
@@ -98,37 +106,47 @@ function Board(props) {
             targetSprite.position.x = sprite.originalPos.x;
             targetSprite.position.y = sprite.originalPos.y;
 
-            // TODO: add victory check
+            const depot = sprite.currIdx;
+            sprite.currIdx = targetSprite.currIdx;
+            targetSprite.currIdx = depot;
+
+            let err = container.children.find(child => child.idx !== child.currIdx);
+
+            if (!err) {
+                props.onVictory();
+            }
         } else {
             // Rollback move
             sprite.position.x = sprite.originalPos.x;
             sprite.position.y = sprite.originalPos.y;
         }
 
-        sprite.z = 0;
+        sprite.zIndex = 0;
     }
 
     const resizeParams = CalculateScale(app.renderer, PIXI.utils.TextureCache['img']);
 
     return (
         <Container sortableChildren={true} {...resizeParams}>
-            {sprites.map((sprite, currIdx) => {
-                return(
-                    <Sprite
-                        key={sprite.realIndex}
-                        idx={sprite.realIndex}
-                        currIdx={currIdx}
-                        interactive={true}
-                        texture={sprite.texture}
-                        x={sprite.x}
-                        y={sprite.y}
-                        ref={el => spriteRefs.current[sprite.realIndex] = el}
-                        pointerup={event => handleEndTouch(spriteRefs.current[sprite.realIndex], event)}
-                        pointerdown={event => handleBeginTouch(spriteRefs.current[sprite.realIndex], event)}
-                        pointermove={event => handleDrag(spriteRefs.current[sprite.realIndex], event)}
-                    />
-                )
-            })}
+            {
+                sprites.map((sprite) => {
+                    return(
+                        <Sprite
+                            key={sprite.realIndex}
+                            idx={sprite.realIndex}
+                            currIdx={sprite.currIndex}
+                            interactive={true}
+                            texture={sprite.texture}
+                            x={sprite.x}
+                            y={sprite.y}
+                            ref={el => spriteRefs.current[sprite.realIndex] = el}
+                            pointerup={event => handleEndTouch(spriteRefs.current[sprite.realIndex], event)}
+                            pointerdown={event => handleBeginTouch(spriteRefs.current[sprite.realIndex], event)}
+                            pointermove={event => handleDrag(spriteRefs.current[sprite.realIndex], event)}
+                        />
+                    )
+                })
+                }
         </Container>
     );
 }

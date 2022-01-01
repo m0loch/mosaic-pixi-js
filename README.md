@@ -22,10 +22,10 @@ PIXI.js
 @inlet/react-pixi
 
 ## Work that still needs to be done
-- check for win
-- fix issues
+- refactor game logic and state handling in <Mosaic> rather than in <Board>, that should...
+- fix state issues
 - check mobile playability
-- win screen
+- improve win screen
 
 ## Known issues
 - the fitting calculation is wrong - it's really evident on mobile
