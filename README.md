@@ -22,8 +22,6 @@ PIXI.js
 @inlet/react-pixi
 
 ## Work that still needs to be done
-- refactor game logic and state handling in <Mosaic> rather than in <Board>, that should...
-- fix state issues
 - check mobile playability
 - improve win screen
 

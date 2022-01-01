@@ -1,65 +1,25 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { Container, Sprite, useApp } from '@inlet/react-pixi';
 import * as PIXI from 'pixi.js';
 import CalculateScale from './utils/calculateScale';
-import CalculateTileTexture from './utils/calculateTileTexture';
-import RandomizeTiles from './utils/randomizeTiles';
 
 function Board(props) {
 
     const app = useApp();
 
-    const [sprites, setSprites] = useState([]);
-    const [loaded, setLoaded] = useState(false);
-
-    const initGame = useCallback(() => {
-        const cfg = RandomizeTiles(props.rows * props.cols);
-
-        const texture = PIXI.utils.TextureCache['img'];
-        const tileHeight = (texture.height / props.rows);
-        const tileWidth = (texture.width / props.cols);
-    
-        const tiles = [];
-        for (let i = 0; i < (props.rows * props.cols); i++) {
-
-            let texture = CalculateTileTexture(
-                cfg[i],
-                props,
-                tileHeight,
-                tileWidth);
-
-            tiles.push({
-                realIndex: cfg[i], // this will keep track of where the tile will need to end up
-                currIndex: i,
-                texture,
-                x: (i % props.cols) * tileWidth,
-                y: Math.floor(i / props.cols) * tileHeight,
-            });
-        }
-
-        setSprites(tiles);
-        setLoaded(true);
-    }, [props]);
-
     const spriteRefs = useRef([]);
 
     useEffect(() => {
-        window.addEventListener('keydown', onKeyPressed);
-
         if (!PIXI.utils.TextureCache['img']) {
             app.loader
                 .add('img', props.image)
-                .load(initGame);
-        } else {
-            // Skips re-loading the background, if that already exists
-            initGame();
+                .load(() => props.onLoaded());
+        } else if (!props.loaded) {
+            props.onLoaded();
         }
+    }, [app, props]);
 
-        return () => window.removeEventListener('keydown', onKeyPressed);
-
-    }, [app, initGame, props.image]);
-
-    if (!loaded) {
+    if (!props.loaded) {
         return(null);
     }
 
@@ -128,8 +88,11 @@ function Board(props) {
 
     return (
         <Container sortableChildren={true} {...resizeParams}>
-            {
-                sprites.map((sprite) => {
+            { props.victory ? (
+                    <Sprite
+                        texture={PIXI.utils.TextureCache['img']}
+                    />
+                ) : props.sprites?.map((sprite) => {
                     return(
                         <Sprite
                             key={sprite.realIndex}

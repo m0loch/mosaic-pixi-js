@@ -26,8 +26,7 @@ const useStyles = makeStyles({
         justifyContent: "center",
 
         opacity: 0,
-        animation: "$appear .5s ease-in",
-        animationDelay: "2s",
+        animation: "$appear .5s ease-in .5s 1 normal forwards",
     },
 });
 
