@@ -22,11 +22,12 @@ PIXI.js
 @inlet/react-pixi
 
 ## Work that still needs to be done
-- check mobile playability
+- improve mobile's aspect
 - improve win screen
 
 ## Known issues
-- the fitting calculation is wrong - it's really evident on mobile
+- resizing should not change the state, doing so at the moment means starting over with the puzzle
+- on mobile the application detects the page as very *VERY* long on the phone's longer axis (height in portrait, width in landscape), this prevents the proper offset calculation
 
 ## Credits for the pictures
 https://syanart.com/
