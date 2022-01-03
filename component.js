@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState, useRef, useCallback } from 'react';
 import { Stage } from '@inlet/react-pixi';
 import * as PIXI from 'pixi.js';
 import Board from './board';
@@ -13,27 +13,11 @@ function Mosaic(props) {
     const [sprites, setSprites] = useState([]);
     const [victory, setVictory] = useState(false);
 
-    const [stageDimensions, setStageDimensions] = useState(null);
-
-    const checkDimensions = () => {
-        if (mainRef.current) {
-            setStageDimensions({
-                width: mainRef.current.offsetWidth,
-                height: mainRef.current.offsetHeight,
-            });
-        }
-    }
-
-    const onLoaded = () => {
-        setLoaded(true);
-        newGame();
-    }
-
     const onVictory = () => {
         setVictory(true);
     }
 
-    const newGame = () => {
+    const newGame = useCallback(() => {
         const cfg = RandomizeTiles(props.rows * props.cols);
 
         const texture = PIXI.utils.TextureCache['img'];
@@ -60,38 +44,37 @@ function Mosaic(props) {
 
         setSprites(tiles);
         setVictory(false);
-    }
+    }, [props]);
 
     useEffect(() => {
-        if (mainRef.current) {
-            window.addEventListener('resize', checkDimensions);
+        const loader = PIXI.Loader.shared;
 
-            checkDimensions();
+        if (!PIXI.utils.TextureCache['img']) {
+            loader
+                .add('img', props.img)
+                .load(() => {
+                    setLoaded(true);
+                    newGame();
+                });
         }
 
-        return () => window.removeEventListener("resize", checkDimensions);
-    }, [])
+    }, [newGame, props.img])
 
     return (
         <div style={{position: "relative", width: "100%", height: "100%"}} ref={mainRef}>
             {(victory) ? <WinScreen onClick={newGame}></WinScreen> : null}
-            { 
-                (stageDimensions) ?
-                    <Stage
-                        width={stageDimensions.width}
-                        height={stageDimensions.height}
-                    >
-                        <Board
-                            image={props.img}
-                            rows={props.rows}
-                            cols={props.cols}
-                            sprites={sprites}
-                            loaded={loaded}
-                            onLoaded={onLoaded}
-                            onVictory={onVictory}
-                            victory={victory}
-                        />
-                    </Stage> : null
+            {
+                <Stage>
+                    <Board
+                        image={props.img}
+                        rows={props.rows}
+                        cols={props.cols}
+                        sprites={sprites}
+                        loaded={loaded}
+                        onVictory={onVictory}
+                        victory={victory}
+                    />
+                </Stage>
             }
         </div>
     );

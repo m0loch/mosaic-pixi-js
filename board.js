@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useCallback, useEffect, useRef } from 'react';
 import { Container, Sprite, useApp } from '@inlet/react-pixi';
 import * as PIXI from 'pixi.js';
 import CalculateScale from './utils/calculateScale';
@@ -7,17 +7,27 @@ function Board(props) {
 
     const app = useApp();
 
+    const mainRef = useRef(null);
     const spriteRefs = useRef([]);
 
-    useEffect(() => {
-        if (!PIXI.utils.TextureCache['img']) {
-            app.loader
-                .add('img', props.image)
-                .load(() => props.onLoaded());
-        } else if (!props.loaded) {
-            props.onLoaded();
+    const resize = useCallback(() => {
+        if (mainRef && mainRef.current) {
+            app.renderer.resize(app.view.parentNode.clientWidth, app.view.parentNode.clientHeight)
+
+            const calc = CalculateScale(app.renderer, PIXI.utils.TextureCache['img']);
+            mainRef.current.x = calc.x;
+            mainRef.current.y = calc.y;
+            mainRef.current.scale = calc.scale;
         }
-    }, [app, props]);
+    }, [app.renderer, app.view.parentNode]);
+
+    useEffect(() => {
+
+        window.addEventListener('resize', resize);
+
+        return () => window.removeEventListener('resize', resize);
+
+    }, [resize]);
 
     if (!props.loaded) {
         return(null);
@@ -84,10 +94,10 @@ function Board(props) {
         sprite.zIndex = 0;
     }
 
-    const resizeParams = CalculateScale(app.renderer, PIXI.utils.TextureCache['img']);
+    resize();
 
     return (
-        <Container sortableChildren={true} {...resizeParams}>
+        <Container sortableChildren={true} ref={mainRef}>
             { props.victory ? (
                     <Sprite
                         texture={PIXI.utils.TextureCache['img']}
