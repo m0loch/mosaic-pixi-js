@@ -26,8 +26,7 @@ PIXI.js
 - improve win screen
 
 ## Known issues
-- resizing should not change the state, doing so at the moment means starting over with the puzzle
-- on mobile the application detects the page as very *VERY* long on the phone's longer axis (height in portrait, width in landscape), this prevents the proper offset calculation
+- on mobile the game is extremely difficult to play on landscape, as the last two rows get designed out of screen
 
 ## Credits for the pictures
 https://syanart.com/

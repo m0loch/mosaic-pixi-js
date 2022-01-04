@@ -8,13 +8,13 @@ function CalculateScale(renderer, texture) {
     if (horizontalFit < verticalFit) {
         return {
             x: 0,
-            y: PIXI.utils.isMobile ? 0 : Math.abs((renderer.height / 2) - (texture.height * horizontalFit / 2)),
+            y: PIXI.utils.isMobile.any ? 0 : Math.abs((renderer.height / 2) - (texture.height * horizontalFit / 2)),
             scale: { x: horizontalFit, y: horizontalFit},
         }
 
     } else {
         return {
-            x: PIXI.utils.isMobile ? 0 : Math.abs((renderer.width / 2) - (texture.width * verticalFit / 2)),
+            x: PIXI.utils.isMobile.any ? 0 : Math.abs((renderer.width / 2) - (texture.width * verticalFit / 2)),
             y: 0,
             scale: { x: verticalFit, y: verticalFit},
         }
