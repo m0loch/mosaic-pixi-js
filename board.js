@@ -17,7 +17,10 @@ function Board(props) {
             const calc = CalculateScale(app.renderer, PIXI.utils.TextureCache['img']);
             mainRef.current.x = calc.x;
             mainRef.current.y = calc.y;
-            mainRef.current.scale = calc.scale;
+            mainRef.current.scale = {
+                x: calc.scale,
+                y: calc.scale,
+            };
         }
     }, [app.renderer, app.view.parentNode]);
 

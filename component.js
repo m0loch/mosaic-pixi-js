@@ -61,10 +61,10 @@ function Mosaic(props) {
     }, [newGame, props.img])
 
     return (
-        <div style={{position: "relative", width: "100%", height: "100%"}} ref={mainRef}>
+        <div style={{position: "relative", margin: "auto", width: "100%", height: "100%", display: "flex", alignContent: "center", justifyContent: "center"}} ref={mainRef}>
             {(victory) ? <WinScreen onClick={newGame}></WinScreen> : null}
             {
-                <Stage>
+                <Stage style={{margin:"auto"}}>
                     <Board
                         image={props.img}
                         rows={props.rows}

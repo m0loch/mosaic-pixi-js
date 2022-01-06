@@ -22,11 +22,10 @@ PIXI.js
 @inlet/react-pixi
 
 ## Work that still needs to be done
-- improve mobile's aspect
 - improve win screen
 
 ## Known issues
-- on mobile the game is extremely difficult to play on landscape, as the last two rows get designed out of screen
+- it is possible, on mobile, to move two tiles at the same time - but they'll just bug
 
 ## Credits for the pictures
 https://syanart.com/
