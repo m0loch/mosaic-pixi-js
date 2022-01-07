@@ -37,7 +37,9 @@ function Board(props) {
     }
 
     const handleBeginTouch = (sprite, event) => {
+
         sprite.isPressed = true;
+        sprite.touchId = event.data.identifier;
 
         // NB: in order for this to work, we need the parent to have the sortableChildren property active
         sprite.zIndex = 1;
@@ -51,7 +53,7 @@ function Board(props) {
     }
 
     const handleDrag = (sprite, event) => {
-        if (sprite.isPressed) {
+        if (sprite.isPressed && (sprite.touchId === event.data.identifier)) {
             let newPos = event.data.getLocalPosition(sprite.parent);
             newPos.x -= sprite.touchOffset.x;
             newPos.y -= sprite.touchOffset.y;

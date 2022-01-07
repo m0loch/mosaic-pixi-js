@@ -24,9 +24,6 @@ PIXI.js
 ## Work that still needs to be done
 - improve win screen
 
-## Known issues
-- it is possible, on mobile, to move two tiles at the same time - but they'll just bug
-
 ## Credits for the pictures
 https://syanart.com/
 This shall be added to the site's section rather than inside this module, consider this a placeholder.
