@@ -12,7 +12,7 @@ function Board(props) {
 
     const resize = useCallback(() => {
         if (mainRef && mainRef.current) {
-            app.renderer.resize(app.view.parentNode.clientWidth, app.view.parentNode.clientHeight)
+            app.renderer.resize(app.view.parentNode.clientWidth, app.view.parentNode.clientHeight);
 
             const calc = CalculateScale(app.renderer, PIXI.utils.TextureCache['img']);
             mainRef.current.x = calc.x;
@@ -108,7 +108,7 @@ function Board(props) {
                         texture={PIXI.utils.TextureCache['img']}
                     />
                 ) : props.sprites?.map((sprite) => {
-                    return(
+                    return (
                         <Sprite
                             key={sprite.realIndex}
                             idx={sprite.realIndex}
@@ -124,7 +124,7 @@ function Board(props) {
                         />
                     )
                 })
-                }
+            }
         </Container>
     );
 }

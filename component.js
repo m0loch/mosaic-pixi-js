@@ -56,6 +56,10 @@ function Mosaic(props) {
                     setLoaded(true);
                     newGame();
                 });
+        } else {
+            // No resize? lol
+            setLoaded(true);
+            newGame();
         }
 
     }, [newGame, props.img])
