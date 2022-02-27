@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef, useCallback } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { Stage } from '@inlet/react-pixi';
 import * as PIXI from 'pixi.js';
 import Board from './board';
@@ -8,7 +8,6 @@ import CalculateTileTexture from './utils/calculateTileTexture';
 
 function Mosaic(props) {
 
-    const mainRef = useRef(null);
     const [loaded, setLoaded] = useState(false);
     const [sprites, setSprites] = useState([]);
     const [victory, setVictory] = useState(false);
@@ -65,7 +64,7 @@ function Mosaic(props) {
     }, [newGame, props.img])
 
     return (
-        <div style={{position: "relative", margin: "auto", width: "100%", height: "100%", display: "flex", alignContent: "center", justifyContent: "center"}} ref={mainRef}>
+        <div style={{position: "relative", margin: "auto", width: "100%", height: "100%", display: "flex", alignContent: "center", justifyContent: "center"}}>
             {(victory) ? <WinScreen onClick={newGame}></WinScreen> : null}
             {
                 <Stage style={{margin:"auto"}}>
